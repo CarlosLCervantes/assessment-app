@@ -4,7 +4,7 @@ class ConferencesController < ApplicationController
     conference = Conference.first
 
     render json: conference.to_json(
-      only: [:name, :short_name],
+      only: [:id, :name, :short_name],
       include: {
         teams: {
           include: { players: {} }

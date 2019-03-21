@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import { Box, Heading } from '@untappd/components'
-import Team from './components/Team';
-
-const API = 'http://localhost:5000'
+import Team from './components/Team'
+import ConferenceResource from './api/ConferenceResource'
+import TeamResource from './api/TeamResource'
 
 class App extends Component {
   constructor(props) {
@@ -11,15 +10,21 @@ class App extends Component {
 
     this.state = {
       conference: null,
-      teams: [],
     }
+
+    this.saveTeamScore = this.saveTeamScore.bind(this)
   }
 
   fetchData() {
-    axios.get(API, { mode: 'no-cors' }).then(response => {
-      const data = response.data
-      this.setState({ conference: data.conference, teams: data.conference.teams })
-    })
+    const conferenceResource = new ConferenceResource()
+
+    conferenceResource.fetchAll()
+      .then(data => {
+        this.setState({ conference: data.conference } )
+      })
+      .catch((error) => {
+        throw error; // TODO: something better here?
+      });
   }
 
   componentDidMount() {
@@ -28,11 +33,12 @@ class App extends Component {
 
   render() {
     const { conference } = this.state
-    const { teams } = this.state
 
     if (conference === null) {
       return <h3>loading</h3>
     }
+
+    const { teams } = conference
 
     return (
       <Box className="App" mx={12} my={5}>
@@ -41,10 +47,15 @@ class App extends Component {
         </Heading>
 
         {teams.map(team => (
-          <Team team={team} />
+          <Team team={team} saveTeamScore={this.saveTeamScore} />
         ))}
       </Box>
     )
+  }
+
+  saveTeamScore(teamId, scores) {
+    const teamResource = new TeamResource()
+    teamResource.update(this.state.conference.id, teamId, scores)
   }
 }
 
