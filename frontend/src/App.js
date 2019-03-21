@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Box, Button, Card, Heading } from '@untappd/components'
+import { Box, Heading } from '@untappd/components'
+import Team from './components/Team';
 
 const API = 'http://localhost:5000'
 
@@ -17,7 +18,7 @@ class App extends Component {
   fetchData() {
     axios.get(API, { mode: 'no-cors' }).then(response => {
       const data = response.data
-      this.setState({ conference: data.conference, teams: data.teams })
+      this.setState({ conference: data.conference, teams: data.conference.teams })
     })
   }
 
@@ -40,18 +41,7 @@ class App extends Component {
         </Heading>
 
         {teams.map(team => (
-          <Card key={team.id} mb={3}>
-            <Card.Header>
-              <Heading>
-                {team.name} {team.mascot}
-              </Heading>
-            </Card.Header>
-            <Card.Content>
-              <li>Player's</li>
-              <li>go</li>
-              <li>here</li>
-            </Card.Content>
-          </Card>
+          <Team team={team} />
         ))}
       </Box>
     )
