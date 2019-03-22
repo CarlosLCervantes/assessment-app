@@ -18,6 +18,7 @@ class App extends Component {
     this.savePlayerStarter = this.savePlayerStarter.bind(this)
 
     this.playerResource = new PlayerResource()
+    this.teamResource = new TeamResource()
   }
 
   fetchData() {
@@ -28,7 +29,7 @@ class App extends Component {
         this.setState({ conference: data.conference } )
       })
       .catch((error) => {
-        throw error; // TODO: something better here?
+        throw error;
       });
   }
 
@@ -47,7 +48,7 @@ class App extends Component {
 
     return (
       <Box className="App" mx={12} my={5}>
-        <Heading>
+        <Heading mb={3}>
           {conference.short_name} ({conference.name})
         </Heading>
 
@@ -65,10 +66,9 @@ class App extends Component {
   }
 
   saveTeamScore(teamId, scores) {
-    const teamResource = new TeamResource()
     const { id: conferenceId } = this.state.conference
 
-    teamResource.update(conferenceId, teamId, scores)
+    this.teamResource.update(conferenceId, teamId, scores)
   }
 
   savePlayerJerseyNumber(teamId, playerId, jersey_number) {

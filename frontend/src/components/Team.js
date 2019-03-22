@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
-import { Card, Heading, TextInput, List } from "@untappd/components";
+import { Card, Heading, TextInput, List, Text } from "@untappd/components";
 import Player from './Player'
+import styled from 'styled-components'
+
+const ScoreTextInput = styled(TextInput)`
+  width: 80px;
+  display: inline-block;
+  margin: 5px 5px;
+  min-height: 30px;
+`
 
 export default class Team extends Component {
   constructor(props) {
@@ -25,21 +33,22 @@ export default class Team extends Component {
         <Card.Header>
           <Heading>
             {name}
-            <div>
-              {mascot} {coach}
-            </div>
+            <Text fontSize={2}>
+              {mascot} - {coach}
+            </Text>
           </Heading>
 
           <div>
-            Wins:
-            <TextInput
+            <Text display='inline-block' width={60}>Wins:</Text>
+            <ScoreTextInput
               value={wins}
               type='number'
               onChange={this.onWinScoreEdited}
               onBlur={this.onScoreBlur}
             />
-            Losses:
-            <TextInput
+            <br />
+            <Text display='inline-block' width={60}>Losses:</Text>
+            <ScoreTextInput
               value={losses}
               type='number'
               onChange={this.onLossScoreEdited}
@@ -47,15 +56,16 @@ export default class Team extends Component {
             />
           </div>
         </Card.Header>
-        <Card.Content>
+        <Card.Content p={0}>
           <List>
             {
               players.map(
-                player => (
+                (player, index) => (
                   <Player
                     key={`Player-${player.id}`}
                     player={player}
                     teamId={id}
+                    index={index}
                     saveJerseyNumber={this.props.saveJerseyNumber}
                     saveStarter={this.props.saveStarter}
                   />
