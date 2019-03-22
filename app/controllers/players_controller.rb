@@ -10,7 +10,9 @@ class PlayersController < ApplicationController
   def update
     @player = Player.find(params[:id])
 
-    render json: { error: true }, status: :record_not_found and return unless @player
+    unless @player
+      render json: { error: true }, status: :record_not_found and return
+    end
 
     if @player.update(player_update_params)
       render json: @player

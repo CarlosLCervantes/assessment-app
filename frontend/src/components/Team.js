@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Card, Heading, TextInput, List, Text } from "@untappd/components";
+import { Card, Heading, TextInput, List, Text } from "@untappd/components"
 import Player from './Player'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 const ScoreTextInput = styled(TextInput)`
@@ -91,4 +92,15 @@ export default class Team extends Component {
 
     this.props.saveTeamScore(this.props.team.id, { wins, losses })
   }
+}
+
+Team.propTypes = {
+  saveTeamScore: PropTypes.func.isRequired,
+  team : PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    mascot: PropTypes.string,
+    coach: PropTypes.string,
+    players: PropTypes.array,
+  }),
 }

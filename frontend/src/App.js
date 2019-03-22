@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Box, Heading } from '@untappd/components'
+import { Box, Heading, Alert } from '@untappd/components'
 import Team from './components/Team'
 import ConferenceResource from './api/ConferenceResource'
 import TeamResource from './api/TeamResource'
@@ -11,26 +11,27 @@ class App extends Component {
 
     this.state = {
       conference: null,
+      error: true
     }
 
     this.saveTeamScore = this.saveTeamScore.bind(this)
     this.savePlayerJerseyNumber = this.savePlayerJerseyNumber.bind(this)
     this.savePlayerStarter = this.savePlayerStarter.bind(this)
 
+    this.conferenceResource = new ConferenceResource()
     this.playerResource = new PlayerResource()
     this.teamResource = new TeamResource()
   }
 
   fetchData() {
-    const conferenceResource = new ConferenceResource()
-
-    conferenceResource.fetchAll()
+    this.conferenceResource.fetchAll()
       .then(data => {
         this.setState({ conference: data.conference } )
+        this.clearError()
       })
-      .catch((error) => {
-        throw error;
-      });
+      .catch(() => {
+        this.setError()
+      })
   }
 
   componentDidMount() {
@@ -38,7 +39,7 @@ class App extends Component {
   }
 
   render() {
-    const { conference } = this.state
+    const { conference, error } = this.state
 
     if (conference === null) {
       return <h3>loading</h3>
@@ -48,8 +49,9 @@ class App extends Component {
 
     return (
       <Box className="App" mx={12} my={5}>
+        { error && <Alert color='red' hasIcon={true}>There was an issue. Please Try Again</Alert> }
         <Heading mb={3}>
-          {conference.short_name} ({conference.name})
+          { conference.short_name } ({ conference.name })
         </Heading>
 
         {teams.map(team => (
@@ -69,18 +71,35 @@ class App extends Component {
     const { id: conferenceId } = this.state.conference
 
     this.teamResource.update(conferenceId, teamId, scores)
+      .then(() => { this.clearError() })
+      .catch(() => { this.setError() })
   }
 
   savePlayerJerseyNumber(teamId, playerId, jersey_number) {
     const { id: conferenceId } = this.state.conference
 
     this.playerResource.update(conferenceId, teamId, playerId, { jersey_number })
+      .then(() => { this.clearError() })
+      .catch(() => { this.setError() })
   }
 
-  savePlayerStarter(teamId, playerId, starter) {
+  savePlayerStarter(teamId, playerId, starter, afterSave) {
     const { id: conferenceId } = this.state.conference
 
     this.playerResource.update(conferenceId, teamId, playerId, { starter })
+      .then(() => {
+        this.clearError()
+        afterSave()
+      })
+      .catch(() => { this.setError() })
+  }
+
+  setError() {
+    this.setState({ error: true} )
+  }
+
+  clearError() {
+    this.setState({ error: false })
   }
 }
 

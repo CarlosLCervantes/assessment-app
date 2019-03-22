@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { TextInput, ListItem, Box, Flex, Toggle } from "@untappd/components";
+import PropTypes from 'prop-types';
 import styled from "styled-components";
 
 const JerseyTextInput = styled(TextInput)`
@@ -84,9 +85,23 @@ export default class Player extends Component {
     const { teamId, player: { id } } = this.props
     const starter = !this.state.starter
 
-    this.props.saveStarter(teamId, id, starter)
-
-    // TODO: this is bad
-    this.setState({ starter })
+    this.props.saveStarter(teamId, id, starter,
+      () => { this.setState({ starter }) }
+    )
   }
 }
+
+Player.propTypes = {
+  index: PropTypes.number.isRequired,
+  teamId: PropTypes.number.isRequired,
+  saveJerseyNumber: PropTypes.func.isRequired,
+  saveStarter: PropTypes.func.isRequired,
+  player: PropTypes.shape({
+    name: PropTypes.string,
+    height: PropTypes.string,
+    weight: PropTypes.number,
+    position: PropTypes.string,
+    jersey_number: PropTypes.number,
+    starter: PropTypes.bool,
+  }),
+};
