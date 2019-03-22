@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Card, Heading, TextInput, List, ListItem, Box, Flex } from "@untappd/components";
+import { Card, Heading, TextInput, List } from "@untappd/components";
+import Player from './Player'
 
 export default class Team extends Component {
   constructor(props) {
@@ -48,7 +49,19 @@ export default class Team extends Component {
         </Card.Header>
         <Card.Content>
           <List>
-            { players.map(player => ( this.renderPlayer(player) ) ) }
+            {
+              players.map(
+                player => (
+                  <Player
+                    key={`Player-${player.id}`}
+                    player={player}
+                    teamId={id}
+                    saveJerseyNumber={this.props.saveJerseyNumber}
+                    saveStarter={this.props.saveStarter}
+                  />
+                )
+              )
+            }
           </List>
         </Card.Content>
       </Card>
@@ -67,42 +80,5 @@ export default class Team extends Component {
     const { wins, losses } = this.state
 
     this.props.saveTeamScore(this.props.team.id, { wins, losses })
-  }
-
-  renderPlayer(player) {
-    const { id, name, jersey_number, height, weight, position, starter } = player
-
-    return (
-      <ListItem key={`Player-${id}`}>
-        <ListItem.Content>
-          <ListItem.Heading>
-            { name }
-          </ListItem.Heading>
-          <ListItem.Info>
-              <Flex flexDirection='row' flexWrap='wrap' alignContent='stretch'>
-                <Box flex={'50%'}>
-                  <strong>Jersey #:</strong>
-                  <TextInput
-                    value={jersey_number}
-                    type='number'
-                  /> {' '}
-                </Box>
-                <Box flex={'50%'}>
-                  <strong>Height:</strong> { height } {' '}
-                </Box>
-                <Box flex={'50%'}>
-                  <strong>Weight:</strong> { weight } {' '}
-                </Box>
-                <Box flex={'50%'}>
-                  <strong>Position:</strong> { position } {' '}
-                </Box>
-                <Box flex={'50%'}>
-                  <strong>Starter:</strong> { starter ? 'Yes' : 'No' }
-                </Box>
-              </Flex>
-          </ListItem.Info>
-        </ListItem.Content>
-      </ListItem>
-    )
   }
 }

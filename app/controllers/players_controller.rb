@@ -9,7 +9,8 @@ class PlayersController < ApplicationController
   # PUT /players
   def update
     @player = Player.find(params[:id])
-    # render json: { error: true }, status: :record_not_found and return unless @team
+
+    render json: { error: true }, status: :record_not_found and return unless @player
 
     if @player.update(player_update_params)
       render json: @player
