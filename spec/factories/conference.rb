@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :conference do
-    name { 'Atlantic Coast Conference' }
-    short_name { 'ACC' }
+    name { Faker::Team.name }
+    short_name { Faker::Team.state }
   end
 end

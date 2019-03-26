@@ -20,6 +20,7 @@ end
 group :test do
   gem 'factory_bot_rails', require: false
   gem 'rspec-rails', '~> 3.8'
+  gem 'faker'
 end
 
 
