@@ -5,11 +5,6 @@ const API = 'http://localhost:5000'
 class BaseResource {
   constructor() {
     this.baseURL = API
-    // this.headers = {
-    //   Accept: 'application/json',
-    //   'Content-Type': 'application/json',
-    //   'X-VERSION': process.env.VERSION,
-    // };
     this.headers = {
       mode: 'no-cors',
     }
